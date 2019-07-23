@@ -7,7 +7,7 @@
 -- two dots ('..' - without quotes).
 
 CREATE TABLE Department (
-    -- DepartmentID  int identity
+    DepartmentID serial   NOT NULL,
     Dept_No varchar(5)   NOT NULL,
     Dept_Name varchar(25)   NOT NULL,
     CONSTRAINT pk_Department PRIMARY KEY (
@@ -16,27 +16,33 @@ CREATE TABLE Department (
 );
 
 CREATE TABLE Dept_Emp (
-    -- DeptEmpID int identity PK
+    DeptEmpID serial   NOT NULL,
     Emp_No int   NOT NULL,
     Dept_No varchar(5)   NOT NULL,
     From_Date date   NOT NULL,
-    To_Date date   NOT NULL
+    To_Date date   NOT NULL,
+    CONSTRAINT pk_Dept_Emp PRIMARY KEY (
+        Emp_No,Dept_No
+     )
 );
 
 CREATE TABLE Dept_Manager (
-    -- DeptManagerID int identity PK
+    DeptManagerID serial   NOT NULL,
     Dept_No varchar(5)   NOT NULL,
     Emp_No int   NOT NULL,
     From_Date date   NOT NULL,
-    To_Date date   NOT NULL
+    To_Date date   NOT NULL,
+    CONSTRAINT pk_Dept_Manager PRIMARY KEY (
+        Dept_No,Emp_No
+     )
 );
 
 CREATE TABLE Employees (
-    -- EmployeeID int identity
+    EmployeeID serial   NOT NULL,
     Emp_No int   NOT NULL,
     Birth_Date date   NOT NULL,
     First_name varchar(50)   NOT NULL,
-    Last_name varchar(50)   NOT NULL,
+    Last_name varchar(50)   NOT NULL,    
     Gender varchar(1)   NOT NULL CHECK(Gender IN ('M','F')),
     Hire_Date date   NOT NULL,
     CONSTRAINT pk_Employees PRIMARY KEY (
@@ -45,19 +51,25 @@ CREATE TABLE Employees (
 );
 
 CREATE TABLE Salaries (
-    -- SalaryID int identity PK
+    SalaryID serial   NOT NULL,
     Emp_No int   NOT NULL,
     Salary money   NOT NULL,
     From_Date date   NOT NULL,
-    To_Date date   NOT NULL
+    To_Date date   NOT NULL,
+    CONSTRAINT pk_Salaries PRIMARY KEY (
+        SalaryID
+     )
 );
 
 CREATE TABLE Titles (
-    -- TitleID int identity PK
+    TitleID serial   NOT NULL,
     Emp_No int   NOT NULL,
     Title varchar(50)   NOT NULL,
     From_Date date   NOT NULL,
-    To_Date date   NOT NULL
+    To_Date date   NOT NULL,
+    CONSTRAINT pk_Titles PRIMARY KEY (
+        TitleID
+     )
 );
 
 ALTER TABLE Dept_Emp ADD CONSTRAINT fk_Dept_Emp_Emp_No FOREIGN KEY(Emp_No)
@@ -66,11 +78,11 @@ REFERENCES Employees (Emp_No);
 ALTER TABLE Dept_Emp ADD CONSTRAINT fk_Dept_Emp_Dept_No FOREIGN KEY(Dept_No)
 REFERENCES Department (Dept_No);
 
-ALTER TABLE Dept_Manager ADD CONSTRAINT fk_Dept_Manager_Emp_No FOREIGN KEY(Emp_No)
-REFERENCES Employees (Emp_No);
-
 ALTER TABLE Dept_Manager ADD CONSTRAINT fk_Dept_Manager_Dept_No FOREIGN KEY(Dept_No)
 REFERENCES Department (Dept_No);
+
+ALTER TABLE Dept_Manager ADD CONSTRAINT fk_Dept_Manager_Emp_No FOREIGN KEY(Emp_No)
+REFERENCES Employees (Emp_No);
 
 ALTER TABLE Salaries ADD CONSTRAINT fk_Salaries_Emp_No FOREIGN KEY(Emp_No)
 REFERENCES Employees (Emp_No);
